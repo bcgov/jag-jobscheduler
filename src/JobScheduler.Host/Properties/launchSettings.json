@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "JobScheduler.Host": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_Environment": "Development",
+        "JobScheduler_Mode": "All"
+      }
+    }
+  }
+}

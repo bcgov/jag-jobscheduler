@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="Instances" />
+    <PackageReference Include="System.Diagnostics.Process" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\JobScheduler.Core\JobScheduler.Core.csproj" />
+  </ItemGroup>
+
+</Project>

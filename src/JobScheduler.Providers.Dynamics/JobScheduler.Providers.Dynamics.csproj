@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="IdentityModel" />
+    <PackageReference Include="Microsoft.PowerPlatform.Dataverse.Client" />
+    <PackageReference Include="Microsoft.PowerPlatform.Dataverse.Client.Dynamics" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\JobScheduler.Common\JobScheduler.Common.csproj" />
+    <ProjectReference Include="..\JobScheduler.Core\JobScheduler.Core.csproj" />
+  </ItemGroup>
+    
+</Project>
