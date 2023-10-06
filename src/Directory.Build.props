@@ -2,12 +2,12 @@
 <Project>
 	<PropertyGroup>
 		<TargetFramework>net7.0</TargetFramework>
-		<ImplicitUsings>disable</ImplicitUsings>
+		<ImplicitUsings>enable</ImplicitUsings>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 
 		<Nullable>enable</Nullable>
 		<WarningLevel>7</WarningLevel>
-		<LangVersion>11.0</LangVersion>
+		<LangVersion>latest</LangVersion>
 		<AnalysisMode>all</AnalysisMode>
 		<AnalysisLevel>latest-all</AnalysisLevel>
 		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
@@ -21,7 +21,7 @@
 		<Company>Province of British Columbia</Company>
 		<Description>JAG Jobs Scheduler</Description>
 		<Copyright>Copyright 2023 Province of British Columbia</Copyright>
-		<RepositoryUrl>https://github.com/bcgovjag-jobscheduler</RepositoryUrl>
+		<RepositoryUrl>https://github.com/bcgov/jag-jobscheduler</RepositoryUrl>
 		<RepositoryType>GIT</RepositoryType>
 	</PropertyGroup>
 </Project>
