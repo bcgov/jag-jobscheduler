@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using DataverseModel;
+﻿using DataverseModel;
 using JobScheduler.Core;
 using JobScheduler.Core.Execution;
 using JobScheduler.Core.JobDescriptions;
@@ -36,7 +31,7 @@ namespace JobScheduler.Providers.Dynamics
             var jobInstances = new List<JobInstance>();
             foreach (var job in jobs)
             {
-                var jobDescription = new JobDescription(job.Id, job.BcGoV_Endpoint, new CustomActionExecutionStrategy(job.BcGoV_Name), new CronSchedule(CronExpression.Create("*/30 * * * * *")));
+                var jobDescription = new JobDescription(job.Id, job.BcGoV_Endpoint, new CustomActionExecutionStrategy(job.BcGoV_Name), new CronSchedule(CronExpression.Create(job.BcGoV_CroneXpResSiOn)));
                 if (job.BcGoV_LastRuntime_Date.HasValue && jobDescription.Schedule.GetNextRun(job.BcGoV_LastRuntime_Date.Value) >= now) continue;
                 var sessionId = Guid.NewGuid();
                 var jobInstance = new JobInstance(sessionId, jobDescription, now);

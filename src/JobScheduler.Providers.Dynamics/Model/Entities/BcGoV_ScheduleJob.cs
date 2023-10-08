@@ -75,6 +75,7 @@ namespace DataverseModel
 		/// </summary>
 		public static partial class Fields
 		{
+			public const string BcGoV_CroneXpResSiOn = "bcgov_cronexpression";
 			public const string BcGoV_Endpoint = "bcgov_endpoint";
 			public const string BcGoV_FetchXml = "bcgov_fetchxml";
 			public const string BcGoV_Frequency = "bcgov_frequency";
@@ -153,6 +154,21 @@ namespace DataverseModel
 		public const string EntityLogicalCollectionName = "bcgov_schedulejobs";
 		
 		public const string EntitySetName = "bcgov_schedulejobs";
+		
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("bcgov_cronexpression")]
+		public string BcGoV_CroneXpResSiOn
+		{
+			[System.Diagnostics.DebuggerNonUserCode()]
+			get
+			{
+				return this.GetAttributeValue<string>("bcgov_cronexpression");
+			}
+			[System.Diagnostics.DebuggerNonUserCode()]
+			set
+			{
+				this.SetAttributeValue("bcgov_cronexpression", value);
+			}
+		}
 		
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("bcgov_endpoint")]
 		public string BcGoV_Endpoint

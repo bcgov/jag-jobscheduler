@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using NCrontab;
 
 namespace JobScheduler.Core.JobDescriptions
@@ -20,7 +19,15 @@ namespace JobScheduler.Core.JobDescriptions
 
         private CronExpression(string expression)
         {
-            cronSchedule = CrontabSchedule.Parse(expression, new CrontabSchedule.ParseOptions { IncludingSeconds = true });
+            if (expression is null) throw new ArgumentNullException(nameof(expression));
+            if (expression.Split(' ').Length == 6)
+            {
+                cronSchedule = CrontabSchedule.Parse(expression, new CrontabSchedule.ParseOptions { IncludingSeconds = true });
+            }
+            else
+            {
+                cronSchedule = CrontabSchedule.Parse(expression, new CrontabSchedule.ParseOptions { IncludingSeconds = false });
+            }
         }
 
         /// <inheritdoc/>
