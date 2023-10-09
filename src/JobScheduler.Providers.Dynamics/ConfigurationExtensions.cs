@@ -1,11 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
-using DataverseModel;
+﻿using DataverseModel;
 using JobScheduler.Core;
 using JobScheduler.Core.Configuration;
 using JobScheduler.Core.Execution;
 using JobScheduler.Core.Reporting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.PowerPlatform.Dataverse.Client;
@@ -19,20 +18,42 @@ namespace JobScheduler.Providers.Dynamics
     public static class ConfigurationExtensions
     {
         /// <summary>
-        /// Configures and adds Crm store to the job scheduler builder
+        /// Configure
         /// </summary>
         /// <param name="builder">The Job Scheduler builder instance</param>
         /// <param name="configure">A configure method for Dynamics options</param>
         /// <returns></returns>
-        public static JobSchedulerConfigurationBuilder WithCrmStore(this JobSchedulerConfigurationBuilder builder, Action<IServiceProvider, CrmSettingsOptions> configure)
+        public static JobSchedulerConfigurationBuilder RegisterCrmJobProvider(this JobSchedulerConfigurationBuilder builder, Action<IServiceProvider, CrmSettingsOptions> configure)
         {
-            builder.AddSingleton<IOptions<CrmSettingsOptions>>(sp =>
+            RegisterCrmStore(builder, configure);
+            builder.AddSingleton<IJobInstanceProvider>(sp => sp.GetRequiredService<CrmStore>());
+            return builder;
+        }
+
+        /// <summary>
+        /// Configure Job Scheduler to use a custom action executer for Crm jobs
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="configure"></param>
+        /// <returns></returns>
+        public static JobSchedulerConfigurationBuilder RegisterCrmCustomActionExecuter(this JobSchedulerConfigurationBuilder builder, Action<IServiceProvider, CrmSettingsOptions> configure)
+        {
+            RegisterCrmStore(builder, configure);
+
+            builder.TryAddSingleton<IJobStateReporter>(sp => sp.GetRequiredService<CrmStore>());
+            builder.AddTransient<IJobExecuterFactory, CustomActionJobExecuterFactory>();
+            return builder;
+        }
+
+        private static void RegisterCrmStore(JobSchedulerConfigurationBuilder builder, Action<IServiceProvider, CrmSettingsOptions> configure)
+        {
+            builder.TryAddSingleton<IOptions<CrmSettingsOptions>>(sp =>
             {
                 var opts = new CrmSettingsOptions();
                 configure(sp, opts);
                 return opts;
             });
-            builder.AddSingleton<IOrganizationService>(sp =>
+            builder.TryAddSingleton<IOrganizationService>(sp =>
             {
                 var settings = sp.GetRequiredService<IOptions<CrmSettingsOptions>>().Value!;
                 if (settings.AuthenticationTokenHandler != null)
@@ -43,13 +64,8 @@ namespace JobScheduler.Providers.Dynamics
                 throw new InvalidOperationException("Crm Store settings are not configured properly");
             });
 
-            builder.AddSingleton<DataverseContext>();
-            builder.AddSingleton<CrmStore>();
-
-            builder.AddSingleton<IJobInstanceProvider>(sp => sp.GetRequiredService<CrmStore>());
-            builder.AddSingleton<IJobStateReporter>(sp => sp.GetRequiredService<CrmStore>());
-            builder.AddTransient<IJobExecuterFactory, CustomActionJobExecuterFactory>();
-            return builder;
+            builder.TryAddSingleton<DataverseContext>();
+            builder.TryAddSingleton<CrmStore>();
         }
     }
 

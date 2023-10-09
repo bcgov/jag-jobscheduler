@@ -3,8 +3,7 @@
     "JobScheduler.Host": {
       "commandName": "Project",
       "environmentVariables": {
-        "DOTNET_Environment": "Development",
-        "JobScheduler_Mode": "All"
+        "DOTNET_Environment": "Development"
       }
     }
   }

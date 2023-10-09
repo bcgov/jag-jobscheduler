@@ -1,8 +1,7 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using JobScheduler.Core.Dispatching;
+﻿using JobScheduler.Core.Dispatching;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace JobScheduler.Host
 {
@@ -13,34 +12,47 @@ namespace JobScheduler.Host
     {
         private readonly ILogger<JobDispatcherService> logger;
         private readonly IJobDispatcher jobDispatcher;
+        private readonly JobSchedulerHostOptions settings;
+        private readonly TimeSpan pollingInterval;
 
         /// <summary>
         /// instaitiate a new service
         /// </summary>
         /// <param name="logger"></param>
+        /// <param name="options"></param>
         /// <param name="jobDispatcher"></param>
-        public JobDispatcherService(ILogger<JobDispatcherService> logger, IJobDispatcher jobDispatcher)
+        public JobDispatcherService(ILogger<JobDispatcherService> logger, IOptions<JobSchedulerHostOptions> options, IJobDispatcher jobDispatcher)
         {
-            this.logger = logger;
-            this.jobDispatcher = jobDispatcher;
+            if (options is null) throw new ArgumentNullException(nameof(options));
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            this.jobDispatcher = jobDispatcher ?? throw new ArgumentNullException(nameof(jobDispatcher));
+            this.settings = options.Value;
+            this.pollingInterval = TimeSpan.FromSeconds(settings.DispatcherSettings.PollingInterval);
         }
 
         /// <inheritdoc/>
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            if (!settings.DispatcherSettings.Enabled)
+            {
+                logger.LogWarning("Disabled");
+                return;
+            }
             logger.LogInformation("Started");
             while (!stoppingToken.IsCancellationRequested)
             {
                 try
                 {
+                    logger.LogDebug("Start processing");
                     await jobDispatcher.Dispatch(stoppingToken);
+                    logger.LogDebug("End processing");
                 }
-                catch (System.Exception e)
+                catch (Exception e)
                 {
                     logger.LogError(e, "Dispatch error");
                 }
 
-                await Task.Delay(10000, stoppingToken);
+                await Task.Delay(pollingInterval, stoppingToken);
             }
 
             logger.LogInformation("Stopped");

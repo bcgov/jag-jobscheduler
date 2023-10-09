@@ -1,7 +1,4 @@
-﻿using System;
-using System.Net.Http;
-using System.Threading.Tasks;
-using IdentityModel.Client;
+﻿using IdentityModel.Client;
 using Microsoft.Extensions.Options;
 
 namespace JobScheduler.Host

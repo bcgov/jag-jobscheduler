@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace JobScheduler.Core
+﻿namespace JobScheduler.Core
 {
     internal interface IEventBus
     {

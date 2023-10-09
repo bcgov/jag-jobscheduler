@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using JobScheduler.Core.Reporting;
+﻿using JobScheduler.Core.Reporting;
 
 namespace JobScheduler.Core.Execution
 {

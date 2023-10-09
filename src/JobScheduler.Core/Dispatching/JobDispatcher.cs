@@ -1,8 +1,4 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace JobScheduler.Core.Dispatching
+﻿namespace JobScheduler.Core.Dispatching
 {
     /// <summary>
     /// Job dispatcher default implementation

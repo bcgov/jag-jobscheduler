@@ -1,5 +1,4 @@
-﻿using System;
-using JobScheduler.Core.JobDescriptions;
+﻿using JobScheduler.Core.JobDescriptions;
 
 namespace JobScheduler.Core.Execution
 {

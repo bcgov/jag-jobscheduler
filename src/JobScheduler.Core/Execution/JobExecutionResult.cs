@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace JobScheduler.Core.Execution
+﻿namespace JobScheduler.Core.Execution
 {
     /// <summary>
     /// Represents a job execution result

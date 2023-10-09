@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using JobScheduler.Core;
+﻿using JobScheduler.Core;
 using JobScheduler.Core.Configuration;
 using JobScheduler.Core.JobDescriptions;
 using JobScheduler.Core.Reporting;

@@ -1,6 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using JobScheduler.Core.Execution;
+﻿using JobScheduler.Core.Execution;
 
 namespace JobScheduler.Core.Reporting
 {

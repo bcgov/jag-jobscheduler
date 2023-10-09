@@ -1,7 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-
-namespace JobScheduler.Core.Execution
+﻿namespace JobScheduler.Core.Execution
 {
     /// <summary>
     /// An interface to implement a job execution agent

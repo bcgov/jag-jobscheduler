@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace JobScheduler.Core.JobDescriptions
+﻿namespace JobScheduler.Core.JobDescriptions
 {
     /// <summary>
     /// Represents a job description metadata to be executed by the job scheduler

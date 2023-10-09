@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace JobScheduler.Core.Execution;
+﻿namespace JobScheduler.Core.Execution;
 
 /// <summary>
 /// Represents an exception within a job execution flow
