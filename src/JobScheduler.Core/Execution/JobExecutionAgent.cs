@@ -48,6 +48,7 @@ namespace JobScheduler.Core.Execution
 
             var result = await executer.Execute(job, ct);
             await jobStateReporter.Report(result, ct);
+            logger.LogInformation("Job {JobId} executed", job.JobId);
             if (!result.Success)
             {
                 logger.LogError("Job {JobId} failed: {Error}", job.JobId, result.Error?.Message);

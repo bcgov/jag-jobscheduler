@@ -28,8 +28,8 @@ namespace JobScheduler.Host
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this.jobExecutionAgent = jobExecutionAgent ?? throw new ArgumentNullException(nameof(jobExecutionAgent));
             this.settings = options.Value;
-            this.pollingInterval = TimeSpan.FromSeconds(settings.DispatcherSettings.PollingInterval);
-            this.delayedStart = TimeSpan.FromSeconds(settings.DispatcherSettings.DelayedStart);
+            this.pollingInterval = TimeSpan.FromSeconds(settings.ExecutionAgentSettings.PollingInterval);
+            this.delayedStart = TimeSpan.FromSeconds(settings.ExecutionAgentSettings.DelayedStart);
         }
 
         /// <inheritdoc/>

@@ -30,7 +30,8 @@ namespace JobScheduler.Core.Dispatching
             var now = DateTimeOffset.UtcNow;
             var pendingJobs = await jobConfigurationProvider.GetReadyJobs(now, ct);
             await jobQueue.Enqueue(pendingJobs, ct);
-            logger.LogInformation("Enqueued {Jobs} jobs", pendingJobs.Count());
+            var jobs = pendingJobs.Count();
+            if (jobs > 0) logger.LogInformation("Enqueued {Jobs} jobs", jobs);
         }
     }
 }
