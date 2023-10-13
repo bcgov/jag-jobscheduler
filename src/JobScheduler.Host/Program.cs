@@ -29,7 +29,9 @@ namespace JobScheduler.Host
             });
 
             AddConfigurations(hostBuilder);
-            hostBuilder.Services.AddHttpClient();
+            hostBuilder.Services
+                .AddHttpClient()
+                .AddDistributedMemoryCache();
 
             hostBuilder.Services.AddSingleton<DynamicsAutenticationTokenProvider>();
 

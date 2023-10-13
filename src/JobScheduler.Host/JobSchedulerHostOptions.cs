@@ -32,14 +32,18 @@ public record JobSchedulerHostOptions : IOptions<JobSchedulerHostOptions>
 public record ExecutionAgentSettings
 {
     /// <summary>
+    /// Configures the execution agent on or off
+    /// </summary>
+    public bool Enabled { get; set; } = true;
+    /// <summary>
     /// Polling interval to process pending jobs
     /// </summary>
     public int PollingInterval { get; set; } = 10;
 
     /// <summary>
-    /// Configures the execution agent on or off
+    /// Delayed start for polling in seconds
     /// </summary>
-    public bool Enabled { get; set; } = true;
+    public int DelayedStart { get; set; } = 10;
 }
 
 /// <summary>
@@ -56,4 +60,9 @@ public record DispatcherSettings
     /// Polling interval in seconds to dispatch pending jobs
     /// </summary>
     public int PollingInterval { get; set; } = 10;
+
+    /// <summary>
+    /// Delayed start for polling in seconds
+    /// </summary>
+    public int DelayedStart { get; set; } = 5;
 }

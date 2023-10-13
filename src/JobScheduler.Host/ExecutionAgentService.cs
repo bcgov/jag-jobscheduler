@@ -14,6 +14,7 @@ namespace JobScheduler.Host
         private readonly IJobExecutionAgent jobExecutionAgent;
         private readonly JobSchedulerHostOptions settings;
         private readonly TimeSpan pollingInterval;
+        private readonly TimeSpan delayedStart;
 
         /// <summary>
         /// Instantiate a new service
@@ -28,6 +29,7 @@ namespace JobScheduler.Host
             this.jobExecutionAgent = jobExecutionAgent ?? throw new ArgumentNullException(nameof(jobExecutionAgent));
             this.settings = options.Value;
             this.pollingInterval = TimeSpan.FromSeconds(settings.DispatcherSettings.PollingInterval);
+            this.delayedStart = TimeSpan.FromSeconds(settings.DispatcherSettings.DelayedStart);
         }
 
         /// <inheritdoc/>
@@ -40,7 +42,7 @@ namespace JobScheduler.Host
             }
 
             logger.LogInformation("About to start");
-            await Task.Delay(pollingInterval, stoppingToken);
+            await Task.Delay(delayedStart, stoppingToken);
             logger.LogInformation("Started");
             while (!stoppingToken.IsCancellationRequested)
             {
@@ -50,7 +52,7 @@ namespace JobScheduler.Host
                     await jobExecutionAgent.Process(stoppingToken);
                     logger.LogDebug("End processing");
                 }
-                catch (System.Exception e)
+                catch (Exception e)
                 {
                     logger.LogError(e, "Execution error");
                 }

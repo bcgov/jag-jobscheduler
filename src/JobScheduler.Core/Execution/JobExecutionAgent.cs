@@ -1,4 +1,5 @@
 ﻿using JobScheduler.Core.Reporting;
+using Microsoft.Extensions.Logging;
 
 namespace JobScheduler.Core.Execution
 {
@@ -10,6 +11,7 @@ namespace JobScheduler.Core.Execution
         private readonly IJobQueueProvider jobQueue;
         private readonly IJobStateReporter jobStateReporter;
         private readonly IEnumerable<IJobExecuterFactory> jobExecuterFactories;
+        private readonly ILogger<JobExecutionAgent> logger;
 
         /// <summary>
         /// Initializes a new job execution agent
@@ -17,11 +19,13 @@ namespace JobScheduler.Core.Execution
         /// <param name="jobQueue"></param>
         /// <param name="jobStateReporter"></param>
         /// <param name="jobExecuterFactories"></param>
-        public JobExecutionAgent(IJobQueueProvider jobQueue, IJobStateReporter jobStateReporter, IEnumerable<IJobExecuterFactory> jobExecuterFactories)
+        /// <param name="logger"></param>
+        public JobExecutionAgent(IJobQueueProvider jobQueue, IJobStateReporter jobStateReporter, IEnumerable<IJobExecuterFactory> jobExecuterFactories, ILogger<JobExecutionAgent> logger)
         {
             this.jobQueue = jobQueue;
             this.jobStateReporter = jobStateReporter;
             this.jobExecuterFactories = jobExecuterFactories;
+            this.logger = logger;
         }
 
         /// <inheritdoc/>
@@ -33,6 +37,7 @@ namespace JobScheduler.Core.Execution
                 return;
             }
 
+            logger.LogDebug("Executing job {JobId}", job.JobId);
             var executerFactory = jobExecuterFactories.SingleOrDefault(f => f.CanCreateFor(job));
             if (executerFactory == null)
             {
@@ -45,6 +50,7 @@ namespace JobScheduler.Core.Execution
             await jobStateReporter.Report(result, ct);
             if (!result.Success)
             {
+                logger.LogError("Job {JobId} failed: {Error}", job.JobId, result.Error?.Message);
                 throw new JobExecutionException($"Execution failed: {result.Error?.Message}") { JobId = job.JobId };
             }
         }

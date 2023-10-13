@@ -1,4 +1,6 @@
-﻿namespace JobScheduler.Core.Dispatching
+﻿using Microsoft.Extensions.Logging;
+
+namespace JobScheduler.Core.Dispatching
 {
     /// <summary>
     /// Job dispatcher default implementation
@@ -7,16 +9,19 @@
     {
         private readonly IJobInstanceProvider jobConfigurationProvider;
         private readonly IJobQueueProvider jobQueue;
+        private readonly ILogger<JobDispatcher> logger;
 
         /// <summary>
         /// Initialize a new job dispatcher
         /// </summary>
         /// <param name="jobConfigurationProvider"></param>
         /// <param name="jobQueue"></param>
-        public JobDispatcher(IJobInstanceProvider jobConfigurationProvider, IJobQueueProvider jobQueue)
+        /// <param name="logger"></param>
+        public JobDispatcher(IJobInstanceProvider jobConfigurationProvider, IJobQueueProvider jobQueue, ILogger<JobDispatcher> logger)
         {
             this.jobConfigurationProvider = jobConfigurationProvider;
             this.jobQueue = jobQueue;
+            this.logger = logger;
         }
 
         /// <inheritdoc/>
@@ -25,6 +30,7 @@
             var now = DateTimeOffset.UtcNow;
             var pendingJobs = await jobConfigurationProvider.GetReadyJobs(now, ct);
             await jobQueue.Enqueue(pendingJobs, ct);
+            logger.LogInformation("Enqueued {Jobs} jobs", pendingJobs.Count());
         }
     }
 }
