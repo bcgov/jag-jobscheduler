@@ -21,19 +21,15 @@ namespace JobScheduler.Host
         public static async Task Main(string[] args)
         {
             var hostBuilder = Microsoft.Extensions.Hosting.Host.CreateApplicationBuilder(args);
+            AddAdditionalConfigurationFile(hostBuilder);
 
             hostBuilder.Services.AddSerilog(config =>
             {
                 config.ReadFrom.Configuration(hostBuilder.Configuration);
             });
 
+            AddConfigurations(hostBuilder);
             hostBuilder.Services.AddHttpClient();
-
-            hostBuilder.Services.AddOptions<JobSchedulerHostOptions>();
-            hostBuilder.Services.Configure<JobSchedulerHostOptions>(hostBuilder.Configuration.GetSection("Host"));
-
-            hostBuilder.Services.AddOptions<DynamicsAuthenticationTokenProviderOptions>();
-            hostBuilder.Services.Configure<DynamicsAuthenticationTokenProviderOptions>(hostBuilder.Configuration.GetSection("DynamicsAuthentication"));
 
             hostBuilder.Services.AddSingleton<DynamicsAutenticationTokenProvider>();
 
@@ -50,11 +46,29 @@ namespace JobScheduler.Host
             await host.RunAsync(cts.Token);
         }
 
+        private static void AddConfigurations(HostApplicationBuilder hostBuilder)
+        {
+            hostBuilder.Services.AddOptions<JobSchedulerHostOptions>();
+            hostBuilder.Services.Configure<JobSchedulerHostOptions>(hostBuilder.Configuration.GetSection("Host"));
+
+            hostBuilder.Services.AddOptions<DynamicsAuthenticationTokenProviderOptions>();
+            hostBuilder.Services.Configure<DynamicsAuthenticationTokenProviderOptions>(hostBuilder.Configuration.GetSection("DynamicsAuthentication"));
+        }
+
         private static void ConfigureCrmOptions(IServiceProvider serviceProvider, CrmSettingsOptions options)
         {
             var configuration = serviceProvider.GetRequiredService<IConfiguration>();
             options.AuthenticationTokenHandler = serviceProvider.GetRequiredService<DynamicsAutenticationTokenProvider>().GetAccessToken;
             options.ServiceUri = configuration.GetValue<Uri>("DynamicsServiceUrl")!;
+        }
+
+        private static void AddAdditionalConfigurationFile(HostApplicationBuilder hostBuilder)
+        {
+            var additionalConfigurationFile = hostBuilder.Configuration.GetSection("Host").GetValue<string?>("AdditionalConfigurationFile");
+            if (additionalConfigurationFile != null && File.Exists(additionalConfigurationFile))
+            {
+                hostBuilder.Configuration.AddJsonFile(additionalConfigurationFile, true);
+            }
         }
     }
 }

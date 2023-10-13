@@ -63,27 +63,27 @@ namespace JobScheduler.Host
         /// <summary>
         /// Gets or sets the client id
         /// </summary>
-        public string ClientId { get; set; } = string.Empty;
+        public string ClientId { get; set; } = null!;
 
         /// <summary>
         /// Gets or sets the client secret
         /// </summary>
-        public string ClientSecret { get; set; } = string.Empty;
+        public string ClientSecret { get; set; } = null!;
 
         /// <summary>
         /// Gets or sets the service account name
         /// </summary>
-        public string ServiceAccountName { get; set; } = string.Empty;
+        public string ServiceAccountName { get; set; } = null!;
 
         /// <summary>
         /// Gets or sets the service account password
         /// </summary>
-        public string ServiceAccountPassword { get; set; } = string.Empty;
+        public string ServiceAccountPassword { get; set; } = null!;
 
         /// <summary>
         /// Gets or sets the resource name in the security token service
         /// </summary>
-        public string ResourceName { get; set; } = string.Empty;
+        public string ResourceName { get; set; } = null!;
 
         /// <inheritdoc/>
         public DynamicsAuthenticationTokenProviderOptions Value => this;

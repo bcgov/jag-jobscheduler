@@ -8,6 +8,11 @@ namespace JobScheduler.Host;
 public record JobSchedulerHostOptions : IOptions<JobSchedulerHostOptions>
 {
     /// <summary>
+    /// Adds an additional configuration file to support json environment configuration at runtime.
+    /// </summary>
+    public string? AdditionalConfigurationFile { get; set; }
+
+    /// <summary>
     /// Dispatcher related settings
     /// </summary>
     public DispatcherSettings DispatcherSettings { get; set; } = new DispatcherSettings();
