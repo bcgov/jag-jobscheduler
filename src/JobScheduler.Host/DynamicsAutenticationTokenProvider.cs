@@ -1,4 +1,5 @@
 ﻿using IdentityModel.Client;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace JobScheduler.Host
@@ -9,6 +10,7 @@ namespace JobScheduler.Host
     public class DynamicsAutenticationTokenProvider
     {
         private readonly IHttpClientFactory httpClientFactory;
+        private readonly ILogger<DynamicsAutenticationTokenProvider> logger;
         private readonly DynamicsAuthenticationTokenProviderOptions authenticationSettings;
 
         /// <summary>
@@ -16,10 +18,12 @@ namespace JobScheduler.Host
         /// </summary>
         /// <param name="httpClientFactory"></param>
         /// <param name="authenticationSettingsOptions"></param>
-        public DynamicsAutenticationTokenProvider(IHttpClientFactory httpClientFactory, IOptions<DynamicsAuthenticationTokenProviderOptions> authenticationSettingsOptions)
+        /// <param name="logger"></param>
+        public DynamicsAutenticationTokenProvider(IHttpClientFactory httpClientFactory, IOptions<DynamicsAuthenticationTokenProviderOptions> authenticationSettingsOptions, ILogger<DynamicsAutenticationTokenProvider> logger)
         {
             if (authenticationSettingsOptions is null) throw new ArgumentNullException(nameof(authenticationSettingsOptions));
             this.httpClientFactory = httpClientFactory;
+            this.logger = logger;
             authenticationSettings = authenticationSettingsOptions.Value;
         }
 
@@ -31,6 +35,7 @@ namespace JobScheduler.Host
         public async Task<string> GetAccessToken()
         {
             var httpClient = httpClientFactory.CreateClient("crm");
+            logger.LogDebug("GetAccessToken from '{Url}' using '{UserName}'", authenticationSettings.OAuth2TokenEndpointUrl.AbsoluteUri, authenticationSettings.ServiceAccountName);
             using var request = new PasswordTokenRequest
             {
                 Address = authenticationSettings.OAuth2TokenEndpointUrl.AbsoluteUri,
@@ -44,7 +49,18 @@ namespace JobScheduler.Host
 
             var response = await httpClient.RequestPasswordTokenAsync(request);
 
-            if (response.IsError) throw new InvalidOperationException(response.Error);
+            if (response.Raw != null) logger.LogTrace("GetAccessToken response: {Response}", response.Raw);
+
+            if (response.IsError)
+            {
+                var exception = response.Exception ?? new InvalidOperationException("Error retreiving access token");
+                if (response.Error != null) exception.Data.Add("Error", response.Error);
+                exception.Data.Add("ErrorType", response.ErrorType);
+                if (response.ErrorDescription != null) exception.Data.Add("ErrorDescription", response.ErrorDescription);
+                if (response.HttpErrorReason != null) exception.Data.Add("HttpErrorReason", response.HttpErrorReason);
+
+                logger.LogError(exception, "Failed to get access token: {Error}", response.Error);
+            }
 
             return response.AccessToken!;
         }

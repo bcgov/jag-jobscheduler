@@ -38,6 +38,9 @@ namespace JobScheduler.Host
                 logger.LogWarning("Disabled");
                 return;
             }
+
+            logger.LogInformation("About to start");
+            await Task.Delay(pollingInterval, stoppingToken);
             logger.LogInformation("Started");
             while (!stoppingToken.IsCancellationRequested)
             {

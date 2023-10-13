@@ -58,7 +58,7 @@ namespace JobScheduler.Providers.Dynamics
                 var settings = sp.GetRequiredService<IOptions<CrmSettingsOptions>>().Value!;
                 if (settings.AuthenticationTokenHandler != null)
                 {
-                    return new ServiceClient(settings.ServiceUri, async _ => await settings.AuthenticationTokenHandler(), false, sp.GetRequiredService<ILogger<IOrganizationService>>());
+                    return new ServiceClient(settings.ServiceUri, async _ => await settings.AuthenticationTokenHandler(), true, sp.GetRequiredService<ILogger<IOrganizationService>>());
                 }
 
                 throw new InvalidOperationException("Crm Store settings are not configured properly");
