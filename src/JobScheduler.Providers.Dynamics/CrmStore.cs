@@ -1,8 +1,8 @@
-﻿using DataverseModel;
-using JobScheduler.Core;
+﻿using JobScheduler.Core;
 using JobScheduler.Core.Execution;
 using JobScheduler.Core.JobDescriptions;
 using JobScheduler.Core.Reporting;
+using JobScheduler.Providers.Dynamics.Model;
 using Microsoft.Xrm.Sdk;
 
 namespace JobScheduler.Providers.Dynamics
@@ -10,7 +10,7 @@ namespace JobScheduler.Providers.Dynamics
     /// <summary>
     /// Dynamics based implementation of job and state store
     /// </summary>
-    public class CrmStore : IJobInstanceProvider, IJobStateReporter
+    internal sealed class CrmStore : IJobInstanceProvider, IJobStateReporter
     {
         private readonly DataverseContext context;
 
@@ -54,7 +54,7 @@ namespace JobScheduler.Providers.Dynamics
         /// <inheritdoc/>
         public async Task Report(JobExecutionResult result, CancellationToken ct = default)
         {
-            if (result is null) throw new ArgumentNullException(nameof(result));
+            ArgumentNullException.ThrowIfNull(result);
             await Task.CompletedTask;
 
             var session = context.BcGoV_ScheduleJObsessionSet.Single(js => js.Id == result.JobInstanceId);

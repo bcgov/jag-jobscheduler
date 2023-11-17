@@ -1,5 +1,5 @@
-﻿using DataverseModel;
-using JobScheduler.Core.Execution;
+﻿using JobScheduler.Core.Execution;
+using JobScheduler.Providers.Dynamics.Model;
 using Microsoft.Xrm.Sdk;
 
 namespace JobScheduler.Providers.Dynamics

@@ -1,8 +1,8 @@
-﻿using DataverseModel;
-using JobScheduler.Core;
+﻿using JobScheduler.Core;
 using JobScheduler.Core.Configuration;
 using JobScheduler.Core.Execution;
 using JobScheduler.Core.Reporting;
+using JobScheduler.Providers.Dynamics.Model;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;

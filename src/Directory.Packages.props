@@ -5,22 +5,22 @@
   <ItemGroup>
     <PackageVersion Include="IdentityModel" Version="6.2.0" />
     <PackageVersion Include="Instances" Version="3.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.Caching.Abstractions" Version="7.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
-    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" />
-    <PackageVersion Include="Microsoft.PowerPlatform.Dataverse.Client" Version="1.1.14" />
-    <PackageVersion Include="Microsoft.PowerPlatform.Dataverse.Client.Dynamics" Version="1.1.14" />
-    <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="7.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Caching.Abstractions" Version="8.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
+    <PackageVersion Include="Microsoft.PowerPlatform.Dataverse.Client" Version="1.1.16" />
+    <PackageVersion Include="Microsoft.PowerPlatform.Dataverse.Client.Dynamics" Version="1.1.16" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0" />
     <PackageVersion Include="ncrontab" Version="3.3.3" />
     <PackageVersion Include="Serilog.AspNetCore" Version="7.0.0" />
-    <PackageVersion Include="Serilog.Extensions.Hosting" Version="7.0.0" />
-    <PackageVersion Include="Serilog.Settings.Configuration" Version="7.0.1" />
-    <PackageVersion Include="Serilog.Sinks.Console" Version="4.1.0" />
-    <PackageVersion Include="Serilog.Sinks.OpenTelemetry" Version="1.1.0" />
+    <PackageVersion Include="Serilog.Extensions.Hosting" Version="8.0.0" />
+    <PackageVersion Include="Serilog.Settings.Configuration" Version="8.0.0" />
+    <PackageVersion Include="Serilog.Sinks.Console" Version="5.0.0" />
+    <PackageVersion Include="Serilog.Sinks.OpenTelemetry" Version="1.2.0" />
     <PackageVersion Include="Serilog.Sinks.Splunk" Version="3.7.0" />
     <PackageVersion Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageVersion Include="System.Diagnostics.Process" Version="4.3.0" />
-    <PackageVersion Include="System.Text.Json" Version="7.0.3" />
+    <PackageVersion Include="System.Text.Json" Version="8.0.0" />
   </ItemGroup>
 </Project>

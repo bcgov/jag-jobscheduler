@@ -19,7 +19,7 @@ namespace JobScheduler.Core.JobDescriptions
 
         private CronExpression(string expression)
         {
-            if (expression is null) throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
             if (expression.Split(' ').Length == 6)
             {
                 cronSchedule = CrontabSchedule.Parse(expression, new CrontabSchedule.ParseOptions { IncludingSeconds = true });

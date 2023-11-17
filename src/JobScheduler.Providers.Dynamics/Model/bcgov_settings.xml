@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Config xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <AudibleCompletionNotification>true</AudibleCompletionNotification>
+  <AudibleCompletionNotification>false</AudibleCompletionNotification>
   <CodeCustomizationService>DLaB.ModelBuilderExtensions.CustomizeCodeDomService,DLaB.ModelBuilderExtensions</CodeCustomizationService>
   <CodeGenerationService>DLaB.ModelBuilderExtensions.CodeGenerationService,DLaB.ModelBuilderExtensions</CodeGenerationService>
   <CodeWriterFilterService>DLaB.ModelBuilderExtensions.CodeWriterFilterService,DLaB.ModelBuilderExtensions</CodeWriterFilterService>
@@ -11,14 +11,14 @@
     <ActionsWhitelist />
     <ActionsToSkip />
     <AddDebuggerNonUserCode>true</AddDebuggerNonUserCode>
-    <AddNewFilesToProject>true</AddNewFilesToProject>
+    <AddNewFilesToProject>false</AddNewFilesToProject>
     <AddOptionSetMetadataAttribute>true</AddOptionSetMetadataAttribute>
     <BuilderSettingsJsonRelativePath>builderSettings.json</BuilderSettingsJsonRelativePath>
     <CamelCaseClassNames>true</CamelCaseClassNames>
     <CamelCaseCustomWords />
     <CamelCaseMemberNames>true</CamelCaseMemberNames>
     <CamelCaseNamesDictionaryRelativePath>DLaB.EarlyBoundGeneratorV2\DLaB.Dictionary.txt</CamelCaseNamesDictionaryRelativePath>
-    <CleanupCrmSvcUtilLocalOptionSets>true</CleanupCrmSvcUtilLocalOptionSets>
+    <CleanupCrmSvcUtilLocalOptionSets>false</CleanupCrmSvcUtilLocalOptionSets>
     <CreateOneFilePerAction>true</CreateOneFilePerAction>
     <CreateOneFilePerEntity>true</CreateOneFilePerEntity>
     <CreateOneFilePerOptionSet>true</CreateOneFilePerOptionSet>
@@ -36,12 +36,12 @@ bcgov_schedulejobsession</EntitiesWhitelist>
     <GenerateEntityRelationships>true</GenerateEntityRelationships>
     <GenerateEntityTypeCode>false</GenerateEntityTypeCode>
     <GenerateEnumProperties>true</GenerateEnumProperties>
-    <GenerateGeneratedCodeAttribute>false</GenerateGeneratedCodeAttribute>
+    <GenerateGeneratedCodeAttribute>true</GenerateGeneratedCodeAttribute>
     <GenerateGlobalOptionSets>false</GenerateGlobalOptionSets>
     <GenerateINotifyPattern>false</GenerateINotifyPattern>
     <GenerateOptionSetMetadataAttribute>true</GenerateOptionSetMetadataAttribute>
     <GenerateTypesAsInternal>false</GenerateTypesAsInternal>
-    <GroupLocalOptionSetsByEntity>true</GroupLocalOptionSetsByEntity>
+    <GroupLocalOptionSetsByEntity>false</GroupLocalOptionSetsByEntity>
     <GroupMessageRequestWithResponse>true</GroupMessageRequestWithResponse>
     <InvalidCSharpNamePrefix>_</InvalidCSharpNamePrefix>
     <MakeAllFieldsEditable>false</MakeAllFieldsEditable>
@@ -103,13 +103,13 @@ VoiceMail</TokenCapitalizationOverrides>
     <WaitForAttachedDebugger>false</WaitForAttachedDebugger>
   </ExtensionConfig>
   <GenerateMessages>false</GenerateMessages>
-  <IncludeCommandLine>false</IncludeCommandLine>
+  <IncludeCommandLine>true</IncludeCommandLine>
   <MessageTypesFolder>Messages</MessageTypesFolder>
   <MetadataProviderService>DLaB.ModelBuilderExtensions.MetadataProviderService,DLaB.ModelBuilderExtensions</MetadataProviderService>
   <MetadataQueryProviderService>DLaB.ModelBuilderExtensions.MetadataQueryProviderService,DLaB.ModelBuilderExtensions</MetadataQueryProviderService>
   <NamingService>DLaB.ModelBuilderExtensions.NamingService,DLaB.ModelBuilderExtensions</NamingService>
   <OptionSetsTypesFolder>OptionSets</OptionSetsTypesFolder>
-  <Namespace>DataverseModel</Namespace>
+  <Namespace>JobScheduler.Providers.Dynamics.Model</Namespace>
   <ServiceContextName>DataverseContext</ServiceContextName>
   <SuppressGeneratedCodeAttribute>true</SuppressGeneratedCodeAttribute>
   <SettingsVersion>2.2023.5.13</SettingsVersion>

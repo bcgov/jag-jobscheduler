@@ -1,5 +1,5 @@
-﻿using DataverseModel;
-using JobScheduler.Core.Execution;
+﻿using JobScheduler.Core.Execution;
+using JobScheduler.Providers.Dynamics.Model;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace JobScheduler.Providers.Dynamics
@@ -23,14 +23,14 @@ namespace JobScheduler.Providers.Dynamics
         /// <inheritdoc/>
         public bool CanCreateFor(JobInstance job)
         {
-            if (job is null) throw new ArgumentNullException(nameof(job));
+            ArgumentNullException.ThrowIfNull(job);
             return job.JobDescription.ExecutionStrategy is CustomActionExecutionStrategy;
         }
 
         /// <inheritdoc/>
         public async Task<IJobExecuter> Create(JobInstance job, CancellationToken ct = default)
         {
-            if (job is null) throw new ArgumentNullException(nameof(job));
+            ArgumentNullException.ThrowIfNull(job);
             var customActionName = ((CustomActionExecutionStrategy)job.JobDescription.ExecutionStrategy).CustomActionName;
             return await Task.FromResult(new CustomActionJobExecuter(services.GetRequiredService<DataverseContext>(), customActionName));
         }

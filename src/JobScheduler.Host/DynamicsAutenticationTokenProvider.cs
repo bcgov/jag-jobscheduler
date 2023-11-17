@@ -24,7 +24,7 @@ namespace JobScheduler.Host
         /// <param name="logger"></param>
         public DynamicsAutenticationTokenProvider(IHttpClientFactory httpClientFactory, IDistributedCache cache, IOptions<DynamicsAuthenticationTokenProviderOptions> authenticationSettingsOptions, ILogger<DynamicsAutenticationTokenProvider> logger)
         {
-            if (authenticationSettingsOptions is null) throw new ArgumentNullException(nameof(authenticationSettingsOptions));
+            ArgumentNullException.ThrowIfNull(authenticationSettingsOptions);
             this.httpClientFactory = httpClientFactory;
             this.cache = cache;
             this.logger = logger;

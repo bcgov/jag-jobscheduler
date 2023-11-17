@@ -24,7 +24,7 @@ namespace JobScheduler.Host
         /// <param name="jobDispatcher"></param>
         public JobDispatcherService(ILogger<JobDispatcherService> logger, IOptions<JobSchedulerHostOptions> options, IJobDispatcher jobDispatcher)
         {
-            if (options is null) throw new ArgumentNullException(nameof(options));
+            ArgumentNullException.ThrowIfNull(options);
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this.jobDispatcher = jobDispatcher ?? throw new ArgumentNullException(nameof(jobDispatcher));
             this.settings = options.Value;

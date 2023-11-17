@@ -47,7 +47,7 @@ namespace JobScheduler.Providers.InMemory
         /// </summary>
         public void ConfigureJobs(IEnumerable<JobDescription> jobs)
         {
-            if (jobs is null) throw new ArgumentNullException(nameof(jobs));
+            ArgumentNullException.ThrowIfNull(jobs);
             foreach (var job in jobs)
             {
                 jobStore[job.JobDescriptionId] = new Job(job);
@@ -57,7 +57,7 @@ namespace JobScheduler.Providers.InMemory
         /// <inheritdoc/>
         public async Task Report(JobExecutionResult result, CancellationToken ct = default)
         {
-            if (result is null) throw new ArgumentNullException(nameof(result));
+            ArgumentNullException.ThrowIfNull(result);
             await Task.CompletedTask;
             logger.LogDebug("report: {Output}", result.Output);
             var job = jobStore.GetValueOrDefault(result.JobDescriptionId);

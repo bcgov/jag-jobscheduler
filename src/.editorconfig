@@ -14,3 +14,9 @@ dotnet_diagnostic.CA1848.severity = suggestion
 
 # CA1031: Do not catch general exception types
 dotnet_diagnostic.CA1031.severity = suggestion
+
+# CA1812: Avoid uninstantiated internal classes
+dotnet_diagnostic.CA1812.severity = suggestion
+
+# S3925: "ISerializable" should be implemented correctly
+dotnet_diagnostic.S3925.severity = suggestion

@@ -24,7 +24,7 @@ namespace JobScheduler.Host
         /// <param name="jobExecutionAgent"></param>
         public ExecutionAgentService(ILogger<ExecutionAgentService> logger, IOptions<JobSchedulerHostOptions> options, IJobExecutionAgent jobExecutionAgent)
         {
-            if (options is null) throw new ArgumentNullException(nameof(options));
+            ArgumentNullException.ThrowIfNull(options);
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this.jobExecutionAgent = jobExecutionAgent ?? throw new ArgumentNullException(nameof(jobExecutionAgent));
             this.settings = options.Value;

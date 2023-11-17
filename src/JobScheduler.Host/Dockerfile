@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS net-builder
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS net-builder
 
 # install diagnostics tools
 RUN mkdir /tools
@@ -22,7 +22,7 @@ COPY . .
 RUN dotnet publish "JobScheduler.Host/JobScheduler.Host.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 # FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
-FROM registry.access.redhat.com/ubi8/dotnet-70-runtime AS final
+FROM registry.access.redhat.com/ubi8/dotnet-80-runtime AS final
 WORKDIR /app
 # copy diagnostics tools
 WORKDIR /tools

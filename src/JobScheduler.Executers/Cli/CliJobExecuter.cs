@@ -12,7 +12,7 @@ namespace JobScheduler.Executers.Cli
         /// <inheritdoc/>
         public async Task<JobExecutionResult> Execute(JobInstance job, CancellationToken ct = default)
         {
-            if (job is null) throw new ArgumentNullException(nameof(job));
+            ArgumentNullException.ThrowIfNull(job);
             if (job.JobDescription.ExecutionStrategy is not CliExecutionStrategy strategy)
             {
                 throw new InvalidOperationException($"Unexpected job execution strategy {job.JobDescription.ExecutionStrategy.GetType().Name}");

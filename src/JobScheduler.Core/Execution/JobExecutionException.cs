@@ -37,13 +37,4 @@ public class JobExecutionException : Exception
     public JobExecutionException(string message, Exception inner) : base(message, inner)
     {
     }
-
-    /// <summary>
-    /// serialization constructor
-    /// </summary>
-    /// <param name="info"></param>
-    /// <param name="context"></param>
-    protected JobExecutionException(
-      System.Runtime.Serialization.SerializationInfo info,
-      System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
 }
