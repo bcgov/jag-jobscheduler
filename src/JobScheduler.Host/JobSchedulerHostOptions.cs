@@ -38,12 +38,12 @@ public record ExecutionAgentSettings
     /// <summary>
     /// Polling interval to process pending jobs
     /// </summary>
-    public int PollingInterval { get; set; } = 10;
+    public int PollingInterval { get; set; } = 15;
 
     /// <summary>
     /// Delayed start for polling in seconds
     /// </summary>
-    public int DelayedStart { get; set; } = 10;
+    public int DelayedStart { get; set; } = 30;
 }
 
 /// <summary>
@@ -59,10 +59,10 @@ public record DispatcherSettings
     /// <summary>
     /// Polling interval in seconds to dispatch pending jobs
     /// </summary>
-    public int PollingInterval { get; set; } = 10;
+    public int PollingInterval { get; set; } = 30;
 
     /// <summary>
     /// Delayed start for polling in seconds
     /// </summary>
-    public int DelayedStart { get; set; } = 5;
+    public int DelayedStart { get; set; } = 10;
 }

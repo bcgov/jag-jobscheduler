@@ -32,7 +32,7 @@ namespace JobScheduler.Providers.Dynamics
             foreach (var job in jobs)
             {
                 var jobDescription = new JobDescription(job.Id, job.BcGoV_Endpoint, new CustomActionExecutionStrategy(job.BcGoV_Name), new CronSchedule(CronExpression.Create(job.BcGoV_CroneXpResSiOn)));
-                if (job.BcGoV_LastRuntime_Date.HasValue && jobDescription.Schedule.GetNextRun(job.BcGoV_LastRuntime_Date.Value) >= now) continue;
+                if (job.BcGoV_LastRuntime_Date.HasValue && job.BcGoV_NextRuntime > now) continue;
                 var sessionId = Guid.NewGuid();
                 var jobInstance = new JobInstance(sessionId, jobDescription, now);
                 var session = new BcGoV_ScheduleJObsession
@@ -41,6 +41,9 @@ namespace JobScheduler.Providers.Dynamics
                     StatusCode = BcGoV_ScheduleJObsession_StatusCode.InProgress
                 };
 
+                job.BcGoV_NextRuntime = jobDescription.Schedule.GetNextRun(now).DateTime;
+
+                context.UpdateObject(job);
                 context.AddObject(session);
                 context.AddLink(session, new Relationship(BcGoV_ScheduleJObsession.Fields.BcGoV_ScheduleJob_BcGoV_ScheduleJObsession), job);
                 jobInstances.Add(jobInstance);
