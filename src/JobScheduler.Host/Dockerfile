@@ -21,8 +21,8 @@ RUN dotnet restore "JobScheduler.Host/JobScheduler.Host.csproj"
 COPY . .
 RUN dotnet publish "JobScheduler.Host/JobScheduler.Host.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
-# FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
-FROM registry.access.redhat.com/ubi8/dotnet-80-runtime AS final
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+#FROM registry.access.redhat.com/ubi8/dotnet-80-runtime AS final
 WORKDIR /app
 # copy diagnostics tools
 WORKDIR /tools
