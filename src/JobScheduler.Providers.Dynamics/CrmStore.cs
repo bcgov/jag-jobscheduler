@@ -62,6 +62,7 @@ namespace JobScheduler.Providers.Dynamics
 
             var session = context.BcGoV_ScheduleJObsessionSet.Single(js => js.Id == result.JobInstanceId);
             session.StatusCode = result.Success ? BcGoV_ScheduleJObsession_StatusCode.Success : BcGoV_ScheduleJObsession_StatusCode.Failed;
+            session.StateCode = result.Success ? BcGoV_ScheduleJObsession_StateCode.Inactive : BcGoV_ScheduleJObsession_StateCode.Active;
             session.BcGoV_Error = result.Error?.ToString();
             context.UpdateObject(session);
             context.SaveChanges();
