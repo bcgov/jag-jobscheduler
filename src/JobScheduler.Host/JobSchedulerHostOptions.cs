@@ -44,6 +44,11 @@ public record ExecutionAgentSettings
     /// Delayed start for polling in seconds
     /// </summary>
     public int DelayedStart { get; set; } = 30;
+
+    /// <summary>
+    /// The number of parallel agents to host, defaults to 1
+    /// </summary>
+    public int NumberOfParallelAgents { get; set; } = 5;
 }
 
 /// <summary>

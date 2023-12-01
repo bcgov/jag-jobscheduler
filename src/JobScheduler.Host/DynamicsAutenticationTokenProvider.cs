@@ -44,11 +44,11 @@ namespace JobScheduler.Host
         public async Task<string> GetAccessToken()
         {
             return (authenticationSettings.CacheDuration.HasValue)
-                ? await cache.GetOrSetAsync("dynamics_token", GetToken, authenticationSettings.CacheDuration.Value)
-                : await GetToken();
+                ? await cache.GetAsync("dynamics_token", GetToken, new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = authenticationSettings.CacheDuration.Value }, default)
+                : await GetToken(default);
         }
 
-        private async Task<string> GetToken()
+        private async ValueTask<string> GetToken(CancellationToken ct)
         {
             var httpClient = httpClientFactory.CreateClient("crm");
             using var request = new PasswordTokenRequest
@@ -62,7 +62,7 @@ namespace JobScheduler.Host
                 Scope = "openid",
             };
 
-            var response = await httpClient.RequestPasswordTokenAsync(request);
+            var response = await httpClient.RequestPasswordTokenAsync(request, ct);
 
             if (logger.IsEnabled(LogLevel.Trace) && response.Raw != null) logger.LogTrace("GetAccessToken response: {Response}", response.Raw);
 

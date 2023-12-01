@@ -1,7 +1,6 @@
 ﻿using JobScheduler.Core.Configuration;
 using JobScheduler.Executers.Cli;
 using JobScheduler.Providers.Dynamics;
-using JobScheduler.Providers.InMemory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -36,7 +35,7 @@ namespace JobScheduler.Host
             hostBuilder.Services.AddSingleton<DynamicsAutenticationTokenProvider>();
 
             hostBuilder.Services.AddJobScheduler()
-                .RegisterCrmJobProvider(ConfigureCrmOptions).WithInMemoryJobQueue()
+                .RegisterCrmJobProvider(ConfigureCrmOptions)
                 .RegisterCliJobExecuter()
                 .RegisterCrmCustomActionExecuter(ConfigureCrmOptions)
                 .AddHostedService<JobDispatcherService>()

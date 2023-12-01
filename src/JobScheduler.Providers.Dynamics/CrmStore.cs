@@ -10,7 +10,7 @@ namespace JobScheduler.Providers.Dynamics
     /// <summary>
     /// Dynamics based implementation of job and state store
     /// </summary>
-    internal sealed class CrmStore : IJobInstanceProvider, IJobStateReporter
+    internal sealed class CrmStore : IJobInstanceProvider, IJobStateReporter, IJobQueueProvider
     {
         private readonly DataverseContext context;
 
@@ -32,20 +32,13 @@ namespace JobScheduler.Providers.Dynamics
             foreach (var job in jobs)
             {
                 var jobDescription = new JobDescription(job.Id, job.BcGoV_Endpoint, new CustomActionExecutionStrategy(job.BcGoV_Name), new CronSchedule(CronExpression.Create(job.BcGoV_CroneXpResSiOn)));
-                if (job.BcGoV_LastRuntime_Date.HasValue && job.BcGoV_NextRuntime > now) continue;
+                if (job.BcGoV_NextRuntime?.ToUniversalTime() > now.ToUniversalTime()) continue;
                 var sessionId = Guid.NewGuid();
                 var jobInstance = new JobInstance(sessionId, jobDescription, now);
-                var session = new BcGoV_ScheduleJObsession
-                {
-                    Id = sessionId,
-                    StatusCode = BcGoV_ScheduleJObsession_StatusCode.InProgress
-                };
 
                 job.BcGoV_NextRuntime = jobDescription.Schedule.GetNextRun(now).DateTime;
 
                 context.UpdateObject(job);
-                context.AddObject(session);
-                context.AddLink(session, new Relationship(BcGoV_ScheduleJObsession.Fields.BcGoV_ScheduleJob_BcGoV_ScheduleJObsession), job);
                 jobInstances.Add(jobInstance);
             }
 
@@ -65,6 +58,36 @@ namespace JobScheduler.Providers.Dynamics
             session.StateCode = result.Success ? BcGoV_ScheduleJObsession_StateCode.Inactive : BcGoV_ScheduleJObsession_StateCode.Active;
             session.BcGoV_Error = result.Error?.ToString();
             context.UpdateObject(session);
+            context.SaveChanges();
+        }
+
+        public async Task<JobInstance?> Dequeue(JobInstanceFilter? filter = null, CancellationToken ct = default)
+        {
+            await Task.CompletedTask;
+
+            var result = context.BcGoV_ScheduleJObsessionSet.Join(context.BcGoV_ScheduleJobSet, s => s.BcGoV_ScheduleJobId.Id, j => j.BcGoV_ScheduleJobId, (s, j) => new { s, j }).Where(r => r.s.StatusCode == BcGoV_ScheduleJObsession_StatusCode.InProgress).OrderBy(r => r.s.CreatedOn).FirstOrDefault();
+            if (result == null) return null;
+            var session = result.s;
+            var job = result.j;
+            var jobDescription = new JobDescription(job.Id, job.BcGoV_Endpoint, new CustomActionExecutionStrategy(job.BcGoV_Name), new CronSchedule(CronExpression.Create(job.BcGoV_CroneXpResSiOn)));
+
+            return new JobInstance(session.Id, jobDescription, (DateTimeOffset)session.CreatedOn!);
+        }
+
+        public async Task Enqueue(IEnumerable<JobInstance> jobs, CancellationToken ct = default)
+        {
+            await Task.CompletedTask;
+            foreach (var jobInstance in jobs)
+            {
+                var job = context.BcGoV_ScheduleJobSet.FirstOrDefault(j => j.BcGoV_ScheduleJobId == jobInstance.JobDescription.JobDescriptionId);
+                var session = new BcGoV_ScheduleJObsession
+                {
+                    Id = jobInstance.JobId,
+                    StatusCode = BcGoV_ScheduleJObsession_StatusCode.InProgress
+                };
+                context.AddObject(session);
+                context.AddLink(session, new Relationship(BcGoV_ScheduleJObsession.Fields.BcGoV_ScheduleJob_BcGoV_ScheduleJObsession), job);
+            }
             context.SaveChanges();
         }
     }

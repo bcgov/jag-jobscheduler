@@ -29,12 +29,12 @@ namespace JobScheduler.Core.Execution
         }
 
         /// <inheritdoc/>
-        public virtual async Task Process(CancellationToken ct = default)
+        public virtual async Task<bool> Process(CancellationToken ct = default)
         {
             var job = await jobQueue.Dequeue(null, ct);
             if (job == null)
             {
-                return;
+                return false;
             }
 
             logger.LogDebug("Executing job {JobId}", job.JobId);
@@ -54,6 +54,7 @@ namespace JobScheduler.Core.Execution
                 logger.LogError("Job {JobId} failed: {Error}", job.JobId, result.Error?.Message);
                 throw new JobExecutionException($"Execution failed: {result.Error?.Message}") { JobId = job.JobId };
             }
+            return true;
         }
     }
 }

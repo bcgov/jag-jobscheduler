@@ -9,7 +9,7 @@
         /// Code to start the agent's processing function
         /// </summary>
         /// <param name="ct"></param>
-        /// <returns></returns>
-        Task Process(CancellationToken ct = default);
+        /// <returns>true if work was done, false if not    </returns>
+        Task<bool> Process(CancellationToken ct = default);
     }
 }

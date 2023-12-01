@@ -41,6 +41,7 @@ namespace JobScheduler.Providers.Dynamics
             RegisterCrmStore(builder, configure);
 
             builder.TryAddSingleton<IJobStateReporter>(sp => sp.GetRequiredService<CrmStore>());
+            builder.TryAddSingleton<IJobQueueProvider>(sp => sp.GetRequiredService<CrmStore>());
             builder.AddTransient<IJobExecuterFactory, CustomActionJobExecuterFactory>();
             return builder;
         }

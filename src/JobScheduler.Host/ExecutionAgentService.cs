@@ -15,6 +15,7 @@ namespace JobScheduler.Host
         private readonly JobSchedulerHostOptions settings;
         private readonly TimeSpan pollingInterval;
         private readonly TimeSpan delayedStart;
+        private readonly int numberOfParallelAgents;
 
         /// <summary>
         /// Instantiate a new service
@@ -30,6 +31,7 @@ namespace JobScheduler.Host
             this.settings = options.Value;
             this.pollingInterval = TimeSpan.FromSeconds(settings.ExecutionAgentSettings.PollingInterval);
             this.delayedStart = TimeSpan.FromSeconds(settings.ExecutionAgentSettings.DelayedStart);
+            this.numberOfParallelAgents = settings.ExecutionAgentSettings.NumberOfParallelAgents;
         }
 
         /// <inheritdoc/>
@@ -46,21 +48,35 @@ namespace JobScheduler.Host
             logger.LogInformation("Started");
             while (!stoppingToken.IsCancellationRequested)
             {
-                try
+                bool workDone = false;
+                do
                 {
-                    logger.LogDebug("Start processing");
-                    await jobExecutionAgent.Process(stoppingToken);
-                    logger.LogDebug("End processing");
-                }
-                catch (Exception e)
-                {
-                    logger.LogError(e, "Execution error");
-                }
+                    var executionTasks = Enumerable.Range(0, numberOfParallelAgents).Select(i => Execute(i, stoppingToken));
+                    var executionResults = await Task.WhenAll(executionTasks);
+                    workDone = Array.Exists(executionResults, r => r);
+                } while (workDone);
 
                 await Task.Delay(pollingInterval, stoppingToken);
             }
 
             logger.LogInformation("Stopped");
+        }
+
+        private async Task<bool> Execute(int agentId, CancellationToken ct)
+        {
+            bool workDone = false;
+            try
+            {
+                logger.LogDebug("Agent {Id}: Start processing", agentId);
+                workDone = await jobExecutionAgent.Process(ct);
+                logger.LogDebug("Agent {Id}: End processing", agentId);
+            }
+            catch (Exception e)
+            {
+                logger.LogError("Agent {Id}: Execution error: {Error}", agentId, e.Message);
+                workDone = true;
+            }
+            return workDone;
         }
     }
 }
