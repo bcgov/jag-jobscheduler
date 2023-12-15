@@ -30,6 +30,7 @@ namespace JobScheduler.Providers.Dynamics
             try
             {
                 var request = new OrganizationRequest(customActionName);
+                request["Target"] = new EntityReference(BcGoV_ScheduleJob.EntityLogicalName, job.JobDescription.JobDescriptionId);
                 var response = context.Execute(request);
 
                 return new JobExecutionResult(job.JobDescription.JobDescriptionId, job.JobId, true, null, response.ResponseName);
