@@ -31,7 +31,7 @@ namespace JobScheduler.Providers.Dynamics
             var jobInstances = new List<JobInstance>();
             foreach (var job in jobs)
             {
-                var jobDescription = new JobDescription(job.Id, job.BcGoV_Endpoint, new CustomActionExecutionStrategy(job.BcGoV_Name), new CronSchedule(CronExpression.Create(job.BcGoV_CroneXpResSiOn)));
+                var jobDescription = new JobDescription(job.Id, job.BcGoV_Name, new CustomActionExecutionStrategy(job.BcGoV_Endpoint), new CronSchedule(CronExpression.Create(job.BcGoV_CroneXpResSiOn)));
                 if (job.BcGoV_NextRuntime?.ToUniversalTime() > now.ToUniversalTime()) continue;
                 var sessionId = Guid.NewGuid();
                 var jobInstance = new JobInstance(sessionId, jobDescription, now);
@@ -69,7 +69,7 @@ namespace JobScheduler.Providers.Dynamics
             if (result == null) return null;
             var session = result.s;
             var job = result.j;
-            var jobDescription = new JobDescription(job.Id, job.BcGoV_Endpoint, new CustomActionExecutionStrategy(job.BcGoV_Name), new CronSchedule(CronExpression.Create(job.BcGoV_CroneXpResSiOn)));
+            var jobDescription = new JobDescription(job.Id, job.BcGoV_Name, new CustomActionExecutionStrategy(job.BcGoV_Endpoint), new CronSchedule(CronExpression.Create(job.BcGoV_CroneXpResSiOn)));
 
             return new JobInstance(session.Id, jobDescription, (DateTimeOffset)session.CreatedOn!);
         }
