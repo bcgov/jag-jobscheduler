@@ -73,7 +73,7 @@ namespace JobScheduler.Host
             }
             catch (Exception e)
             {
-                logger.LogError("Agent {Id}: Execution error: {Error}", agentId, e.Message);
+                logger.LogError(e, "Agent {Id}: Execution error: {Error}", agentId, e.Message);
                 workDone = true;
             }
             return workDone;
