@@ -27,19 +27,29 @@ namespace JobScheduler.Providers.Dynamics
         public async Task<IEnumerable<JobInstance>> GetReadyJobs(DateTimeOffset now, CancellationToken ct = default)
         {
             await Task.CompletedTask;
-            var jobs = context.BcGoV_ScheduleJobSet.Where(sj => sj.StateCode == BcGoV_ScheduleJob_StateCode.Active).ToList();
+            var utcNow = now.ToUniversalTime();
+            var jobs = context.BcGoV_ScheduleJobSet
+                .Where(sj => sj.StateCode == BcGoV_ScheduleJob_StateCode.Active && (sj.BcGoV_NextRuntime == null || sj.BcGoV_NextRuntime <= utcNow.UtcDateTime))
+                .ToList();
             var jobInstances = new List<JobInstance>();
             foreach (var job in jobs)
             {
-                var jobDescription = new JobDescription(job.BcGoV_ScheduleJobId!.Value, job.BcGoV_Name, new CustomActionExecutionStrategy(job.BcGoV_Endpoint), new CronSchedule(CronExpression.Create(job.BcGoV_CroneXpResSiOn)));
-                if (job.BcGoV_NextRuntime?.ToUniversalTime() > now.ToUniversalTime()) continue;
-                var sessionId = Guid.NewGuid();
-                var jobInstance = new JobInstance(sessionId, jobDescription, now);
+                var isFirstTimeJob = job.BcGoV_NextRuntime == null;
+                var jobDescription = new JobDescription(
+                    job.BcGoV_ScheduleJobId!.Value,
+                    job.BcGoV_Name,
+                    new CustomActionExecutionStrategy(job.BcGoV_Endpoint),
+                    new CronSchedule(CronExpression.Create(job.BcGoV_CroneXpResSiOn)));
 
-                job.BcGoV_NextRuntime = jobDescription.Schedule.GetNextRun(now).DateTime;
-
+                job.BcGoV_NextRuntime = jobDescription.Schedule.GetNextRun(job.BcGoV_LastRuntime ?? utcNow).UtcDateTime;
                 context.UpdateObject(job);
-                jobInstances.Add(jobInstance);
+
+                if (!isFirstTimeJob)
+                {
+                    var sessionId = Guid.NewGuid();
+                    var jobInstance = new JobInstance(sessionId, jobDescription, utcNow);
+                    jobInstances.Add(jobInstance);
+                }
             }
 
             context.SaveChanges();
@@ -65,7 +75,11 @@ namespace JobScheduler.Providers.Dynamics
         {
             await Task.CompletedTask;
 
-            var result = context.BcGoV_ScheduleJObsessionSet.Join(context.BcGoV_ScheduleJobSet, s => s.BcGoV_ScheduleJobId.Id, j => j.BcGoV_ScheduleJobId, (s, j) => new { s, j }).Where(r => r.s.StatusCode == BcGoV_ScheduleJObsession_StatusCode.InProgress).OrderBy(r => r.s.CreatedOn).FirstOrDefault();
+            var result = context.BcGoV_ScheduleJObsessionSet
+                .Join(context.BcGoV_ScheduleJobSet, s => s.BcGoV_ScheduleJobId.Id, j => j.BcGoV_ScheduleJobId, (s, j) => new { s, j })
+                .Where(r => r.s.StatusCode == BcGoV_ScheduleJObsession_StatusCode.InProgress)
+                .OrderBy(r => r.s.CreatedOn)
+                .FirstOrDefault();
             if (result == null) return null;
             var session = result.s;
             var job = result.j;

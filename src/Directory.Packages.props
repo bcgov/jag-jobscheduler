@@ -3,6 +3,7 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup>
+    <PackageVersion Include="Cronos" Version="0.8.4" />
     <PackageVersion Include="IdentityModel" Version="7.0.0" />
     <PackageVersion Include="Instances" Version="3.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Caching.Abstractions" Version="8.0.0" />

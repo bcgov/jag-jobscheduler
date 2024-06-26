@@ -36,7 +36,7 @@
     public record CronSchedule(CronExpression CronExpression) : JobSchedule
     {
         /// <inheritdoc/>
-        public override DateTimeOffset GetNextRun(DateTimeOffset lastRun) => new DateTimeOffset(CronExpression.GetNextSchedule(lastRun.DateTime), lastRun.Offset);
+        public override DateTimeOffset GetNextRun(DateTimeOffset lastRun) => new DateTimeOffset(CronExpression.GetNextSchedule(lastRun.UtcDateTime), lastRun.Offset);
     }
 
     /// <summary>
