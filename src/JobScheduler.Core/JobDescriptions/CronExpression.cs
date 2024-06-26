@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using NCrontab;
+using JobScheduler.Core.Extensions;
 
 namespace JobScheduler.Core.JobDescriptions
 {
@@ -15,18 +15,18 @@ namespace JobScheduler.Core.JobDescriptions
         /// <returns></returns>
         public static CronExpression Create(string cronExpression) => new CronExpression(cronExpression);
 
-        private readonly CrontabSchedule cronSchedule;
+        private readonly Cronos.CronExpression cronSchedule;
 
         private CronExpression(string expression)
         {
             ArgumentNullException.ThrowIfNull(expression);
             if (expression.Split(' ').Length == 6)
             {
-                cronSchedule = CrontabSchedule.Parse(expression, new CrontabSchedule.ParseOptions { IncludingSeconds = true });
+                cronSchedule = Cronos.CronExpression.Parse(expression, Cronos.CronFormat.IncludeSeconds);
             }
             else
             {
-                cronSchedule = CrontabSchedule.Parse(expression, new CrontabSchedule.ParseOptions { IncludingSeconds = false });
+                cronSchedule = Cronos.CronExpression.Parse(expression, Cronos.CronFormat.Standard);
             }
         }
 
@@ -73,6 +73,8 @@ namespace JobScheduler.Core.JobDescriptions
         /// </summary>
         /// <param name="baseSchedule"></param>
         /// <returns></returns>
-        public DateTime GetNextSchedule(DateTime baseSchedule) => cronSchedule.GetNextOccurrence(baseSchedule);
+        public DateTime GetNextSchedule(DateTime baseSchedule) =>
+            cronSchedule.GetNextOccurrence(baseSchedule, DateExtensions.GetPstTimeZone())
+            ?? throw new InvalidOperationException($"No next date for {baseSchedule} in cron expression {cronSchedule.ToString()}");
     }
 }
