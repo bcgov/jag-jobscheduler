@@ -27,9 +27,8 @@ namespace JobScheduler.Providers.Dynamics
         public async Task<IEnumerable<JobInstance>> GetReadyJobs(DateTimeOffset now, CancellationToken ct = default)
         {
             await Task.CompletedTask;
-            var utcNow = now.ToUniversalTime();
             var jobs = context.BcGoV_ScheduleJobSet
-                .Where(sj => sj.StateCode == BcGoV_ScheduleJob_StateCode.Active && (sj.BcGoV_NextRuntime == null || sj.BcGoV_NextRuntime <= utcNow.UtcDateTime))
+                .Where(sj => sj.StateCode == BcGoV_ScheduleJob_StateCode.Active && (sj.BcGoV_NextRuntime == null || sj.BcGoV_NextRuntime <= now.UtcDateTime))
                 .ToList();
             var jobInstances = new List<JobInstance>();
             foreach (var job in jobs)
@@ -41,13 +40,13 @@ namespace JobScheduler.Providers.Dynamics
                     new CustomActionExecutionStrategy(job.BcGoV_Endpoint),
                     new CronSchedule(CronExpression.Create(job.BcGoV_CroneXpResSiOn)));
 
-                job.BcGoV_NextRuntime = jobDescription.Schedule.GetNextRun(job.BcGoV_LastRuntime ?? utcNow).UtcDateTime;
+                job.BcGoV_NextRuntime = DateTime.SpecifyKind(jobDescription.Schedule.GetNextRun(job.BcGoV_LastRuntime ?? now).UtcDateTime, DateTimeKind.Local);
                 context.UpdateObject(job);
 
                 if (!isFirstTimeJob)
                 {
                     var sessionId = Guid.NewGuid();
-                    var jobInstance = new JobInstance(sessionId, jobDescription, utcNow);
+                    var jobInstance = new JobInstance(sessionId, jobDescription, now);
                     jobInstances.Add(jobInstance);
                 }
             }
@@ -66,7 +65,7 @@ namespace JobScheduler.Providers.Dynamics
             var session = context.BcGoV_ScheduleJObsessionSet.Single(js => js.Id == result.JobInstanceId);
             session.StatusCode = result.Success ? BcGoV_ScheduleJObsession_StatusCode.Success : BcGoV_ScheduleJObsession_StatusCode.Failed;
             session.StateCode = result.Success ? BcGoV_ScheduleJObsession_StateCode.Inactive : BcGoV_ScheduleJObsession_StateCode.Active;
-            session.BcGoV_Error = result.Error?.ToString();
+            session.BcGoV_Error = result.Error?.ToString().Substring(0, 4000);
             context.UpdateObject(session);
             context.SaveChanges();
         }

@@ -73,7 +73,7 @@ namespace JobScheduler.Core.JobDescriptions
         /// </summary>
         /// <param name="baseSchedule"></param>
         /// <returns></returns>
-        public DateTime GetNextSchedule(DateTime baseSchedule) =>
+        public DateTimeOffset GetNextSchedule(DateTimeOffset baseSchedule) =>
             cronSchedule.GetNextOccurrence(baseSchedule, DateExtensions.GetPstTimeZone())
             ?? throw new InvalidOperationException($"No next date for {baseSchedule} in cron expression {cronSchedule.ToString()}");
     }

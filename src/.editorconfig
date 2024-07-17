@@ -23,3 +23,6 @@ dotnet_diagnostic.S3925.severity = suggestion
 
 # CA1024: Use properties where appropriate
 dotnet_diagnostic.CA1024.severity = suggestion
+
+# S1694: An abstract class should have both abstract and concrete methods
+dotnet_diagnostic.S1694.severity = suggestion
