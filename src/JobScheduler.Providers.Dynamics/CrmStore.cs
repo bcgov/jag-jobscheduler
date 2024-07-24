@@ -41,7 +41,7 @@ namespace JobScheduler.Providers.Dynamics
                     new CustomActionExecutionStrategy(job.BcGoV_Endpoint),
                     new CronSchedule(CronExpression.Create(job.BcGoV_CroneXpResSiOn)));
 
-                job.BcGoV_NextRuntime = DateTime.SpecifyKind(jobDescription.Schedule.GetNextRun(job.BcGoV_LastRuntime ?? now).DateTime, DateTimeKind.Local);
+                job.BcGoV_NextRuntime = DateTime.SpecifyKind(jobDescription.Schedule.GetNextRun(now).DateTime, DateTimeKind.Local);
                 context.UpdateObject(job);
 
                 if (!isFirstTimeJob)
