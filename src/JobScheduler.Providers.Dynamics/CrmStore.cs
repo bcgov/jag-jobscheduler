@@ -1,5 +1,6 @@
 ﻿using JobScheduler.Core;
 using JobScheduler.Core.Execution;
+using JobScheduler.Core.Extensions;
 using JobScheduler.Core.JobDescriptions;
 using JobScheduler.Core.Reporting;
 using JobScheduler.Providers.Dynamics.Model;
@@ -40,7 +41,7 @@ namespace JobScheduler.Providers.Dynamics
                     new CustomActionExecutionStrategy(job.BcGoV_Endpoint),
                     new CronSchedule(CronExpression.Create(job.BcGoV_CroneXpResSiOn)));
 
-                job.BcGoV_NextRuntime = DateTime.SpecifyKind(jobDescription.Schedule.GetNextRun(job.BcGoV_LastRuntime ?? now).UtcDateTime, DateTimeKind.Local);
+                job.BcGoV_NextRuntime = DateTime.SpecifyKind(jobDescription.Schedule.GetNextRun(job.BcGoV_LastRuntime ?? now).DateTime, DateTimeKind.Local);
                 context.UpdateObject(job);
 
                 if (!isFirstTimeJob)
@@ -65,7 +66,7 @@ namespace JobScheduler.Providers.Dynamics
             var session = context.BcGoV_ScheduleJObsessionSet.Single(js => js.Id == result.JobInstanceId);
             session.StatusCode = result.Success ? BcGoV_ScheduleJObsession_StatusCode.Success : BcGoV_ScheduleJObsession_StatusCode.Failed;
             session.StateCode = result.Success ? BcGoV_ScheduleJObsession_StateCode.Inactive : BcGoV_ScheduleJObsession_StateCode.Active;
-            session.BcGoV_Error = result.Error?.ToString().Substring(0, 4000);
+            session.BcGoV_Error = result.Error?.ToString().SafeSubstring(4000);
             context.UpdateObject(session);
             context.SaveChanges();
         }
