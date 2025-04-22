@@ -94,13 +94,15 @@ namespace JobScheduler.Providers.Dynamics
             foreach (var jobInstance in jobs)
             {
                 var job = context.BcGoV_ScheduleJobSet.FirstOrDefault(j => j.BcGoV_ScheduleJobId == jobInstance.JobDescription.JobDescriptionId);
+                if (job == null) continue;
                 var session = new BcGoV_ScheduleJObsession
                 {
                     Id = jobInstance.JobId,
-                    StatusCode = BcGoV_ScheduleJObsession_StatusCode.InProgress
+                    StatusCode = BcGoV_ScheduleJObsession_StatusCode.InProgress,
+                    BcGoV_ScheduleJobId = new EntityReference("bcgov_schedulejob", job.Id)
                 };
                 context.AddObject(session);
-                context.AddLink(session, new Relationship(BcGoV_ScheduleJObsession.Fields.BcGoV_ScheduleJob_BcGoV_ScheduleJObsession), job);
+                //context.AddLink(session, new Relationship(BcGoV_ScheduleJObsession.Fields.BcGoV_ScheduleJob_BcGoV_ScheduleJObsession), job);
             }
             context.SaveChanges();
         }
