@@ -4,6 +4,7 @@ using JobScheduler.Core.Extensions;
 using JobScheduler.Core.JobDescriptions;
 using JobScheduler.Core.Reporting;
 using JobScheduler.Providers.Dynamics.Model;
+using Microsoft.Extensions.Logging;
 using Microsoft.Xrm.Sdk;
 
 namespace JobScheduler.Providers.Dynamics
@@ -14,14 +15,17 @@ namespace JobScheduler.Providers.Dynamics
     internal sealed class CrmStore : IJobInstanceProvider, IJobStateReporter, IJobQueueProvider
     {
         private readonly DataverseContext context;
+        private readonly ILogger<CrmStore> logger;
 
         /// <summary>
         /// Instantiates a new instance of crm store
         /// </summary>
         /// <param name="context"></param>
-        public CrmStore(DataverseContext context)
+        /// <param name="logger"></param>
+        public CrmStore(DataverseContext context, ILogger<CrmStore> logger)
         {
             this.context = context;
+            this.logger = logger;
         }
 
         /// <inheritdoc/>
@@ -34,6 +38,9 @@ namespace JobScheduler.Providers.Dynamics
             var jobInstances = new List<JobInstance>();
             foreach (var job in jobs)
             {
+                string cronStr = job.BcGoV_CroneXpResSiOn;
+                logger.LogInformation("cronStr = {CronStr}", cronStr);
+
                 var isFirstTimeJob = job.BcGoV_NextRuntime == null;
                 var jobDescription = new JobDescription(
                     job.BcGoV_ScheduleJobId!.Value,
@@ -42,6 +49,8 @@ namespace JobScheduler.Providers.Dynamics
                     new CronSchedule(CronExpression.Create(job.BcGoV_CroneXpResSiOn)));
 
                 job.BcGoV_NextRuntime = DateTime.SpecifyKind(jobDescription.Schedule.GetNextRun(now).DateTime, DateTimeKind.Local);
+                logger.LogInformation("job.BcGoV_CroneXpResSiOn = {BcGoV_CroneXpResSiOn}", job.BcGoV_CroneXpResSiOn);
+                job.BcGoV_CroneXpResSiOn = cronStr;
                 context.UpdateObject(job);
 
                 if (!isFirstTimeJob)
