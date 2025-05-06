@@ -36,11 +36,9 @@ namespace JobScheduler.Providers.Dynamics
                 .Where(sj => sj.StateCode == BcGoV_ScheduleJob_StateCode.Active && (sj.BcGoV_NextRuntime == null || sj.BcGoV_NextRuntime <= now.UtcDateTime))
                 .ToList();
             var jobInstances = new List<JobInstance>();
+
             foreach (var job in jobs)
             {
-                string cronStr = job.BcGoV_CroneXpResSiOn;
-                logger.LogInformation("cronStr = {CronStr}", cronStr);
-
                 var isFirstTimeJob = job.BcGoV_NextRuntime == null;
                 var jobDescription = new JobDescription(
                     job.BcGoV_ScheduleJobId!.Value,
@@ -48,9 +46,8 @@ namespace JobScheduler.Providers.Dynamics
                     new CustomActionExecutionStrategy(job.BcGoV_Endpoint),
                     new CronSchedule(CronExpression.Create(job.BcGoV_CroneXpResSiOn)));
 
-                job.BcGoV_NextRuntime = DateTime.SpecifyKind(jobDescription.Schedule.GetNextRun(now).DateTime, DateTimeKind.Local);
-                logger.LogInformation("job.BcGoV_CroneXpResSiOn = {BcGoV_CroneXpResSiOn}", job.BcGoV_CroneXpResSiOn);
-                job.BcGoV_CroneXpResSiOn = cronStr;
+                DateTime dt = jobDescription.Schedule.GetNextRun(now).DateTime;
+                job.BcGoV_NextRuntime = dt;
                 context.UpdateObject(job);
 
                 if (!isFirstTimeJob)
