@@ -23,6 +23,10 @@ RUN dotnet publish "JobScheduler.Host/JobScheduler.Host.csproj" -c Release -o /a
 
 #FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 FROM registry.access.redhat.com/ubi8/dotnet-80-runtime AS final
+# tzdata 2026b or later knows British Columbia stays on UTC-7 all year
+USER 0
+RUN microdnf update -y tzdata && microdnf clean all
+USER 1001
 WORKDIR /app
 # copy diagnostics tools
 WORKDIR /tools
